@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>School Animation Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    <header class="hero" id="home">
+        <nav class="navbar">
+            <div class="brand">SchoolSpark</div>
+            <div class="nav-links" id="navLinks">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#programs">Programs</a>
+                <a href="#admission">Admission</a>
+                <a href="#fee-notice">Fee Notice</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle">☰</button>
+        </nav>
+
+        <div class="hero-content">
+            <h1 class="text-glow">Welcome to Your School</h1>
+            <p class="lead">A bright place for learning, creativity, and animated stories.</p>
+            <a class="button" href="#admission">Apply for Admission</a>
+        </div>
+        <div class="hero-waves">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <main>
+        <section id="about" class="section about fade-in">
+            <div class="section-inner">
+                <div class="card highlight">
+                    <h2>About Our School</h2>
+                    <p>Our school helps students grow in a safe and joyful environment, blending modern learning with fun and creativity.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card slide-up">
+                        <h3>120+</h3>
+                        <p>Teachers & Staff</p>
+                    </div>
+                    <div class="stat-card slide-up delay-1">
+                        <h3>1500+</h3>
+                        <p>Active Students</p>
+                    </div>
+                    <div class="stat-card slide-up delay-2">
+                        <h3>30+</h3>
+                        <p>Clubs & Activities</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="programs" class="section programs fade-in">
+            <div class="section-inner">
+                <h2>Programs</h2>
+                <div class="program-grid">
+                    <article class="program-card pulse">
+                        <h3>Science Lab</h3>
+                        <p>Hands-on experiments and creative science projects for all ages.</p>
+                    </article>
+                    <article class="program-card pulse delay-1">
+                        <h3>Arts & Music</h3>
+                        <p>Drawing, dance, music, and performance programs to build confidence.</p>
+                    </article>
+                    <article class="program-card pulse delay-2">
+                        <h3>Sports Zone</h3>
+                        <p>Fun athletic activities, teamwork, and healthy living opportunities.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="admission" class="section admission fade-in">
+            <div class="section-inner">
+                <div class="highlight">
+                    <h2>Admission</h2>
+                    <p>Submit your details and our admissions team will contact you with the next steps.</p>
+                </div>
+                <div class="admission-grid">
+                    <form class="admission-form" method="post" action="{{ url_for('submit_admission') }}">
+                        <div class="input-group">
+                            <label for="name">Student Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter student name" required />
+                        </div>
+                        <div class="input-group">
+                            <label for="grade">Grade Applying For</label>
+                            <input type="text" id="grade" name="grade" class="form-control" placeholder="Grade / Class" required />
+                        </div>
+                        <div class="input-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" required />
+                        </div>
+                        <div class="input-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+91 98765 43210" required />
+                        </div>
+                        <div class="input-group full-width">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" class="form-control" rows="5" placeholder="Tell us a little about your child."></textarea>
+                        </div>
+                        <button type="submit" class="button">Submit Application</button>
+                    </form>
+                    <div class="notice-card admission-status">
+                        {% if admission_sent %}
+                        <h3>Application Received</h3>
+                        <p>Thank you, {{ admission_data.name }}. Your request for Grade {{ admission_data.grade }} has been submitted.</p>
+                        <p>We will contact you at {{ admission_data.email }} or {{ admission_data.phone }}.</p>
+                        {% else %}
+                        <h3>Fast Track Admission</h3>
+                        <p>Complete the form to receive a personalized admission guide, fee structure, and onboarding support from our team.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fee-notice" class="section fee-notice fade-in">
+            <div class="section-inner">
+                <h2>Fee Notice</h2>
+                <p>Find the current fee notice for your student by entering the school ID below.</p>
+                <div class="notice-grid">
+                    <form class="fee-form" method="post" action="{{ url_for('fee_notice') }}">
+                        <div class="input-group full-width">
+                            <label for="student_id">Student ID</label>
+                            <input type="text" id="student_id" name="student_id" class="form-control" placeholder="S1001" required />
+                        </div>
+                        <button type="submit" class="button">View Fee Notice</button>
+                    </form>
+                    <div class="notice-card">
+                        {% if fee_notice %}
+                        <h3>Fee Notice for {{ fee_notice.student }}</h3>
+                        <p><strong>Grade:</strong> {{ fee_notice.grade }}</p>
+                        <p><strong>Amount Due:</strong> {{ fee_notice.due }}</p>
+                        <p><strong>Due Date:</strong> {{ fee_notice.due_date }}</p>
+                        <p>Present this notice at the school office or use the online portal for payment.</p>
+                        {% elif student_id is defined %}
+                        <h3>No Notice Found</h3>
+                        <p>We could not find a fee notice for student ID <strong>{{ student_id }}</strong>. Please verify the ID and try again.</p>
+                        {% else %}
+                        <h3>Fee Notice Lookup</h3>
+                        <p>Enter the student ID to see the latest fee details and payment deadline.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section contact fade-in">
+            <div class="section-inner">
+                <h2>Contact Us</h2>
+                <p>Ready to join the adventure? Reach out and we will help you explore the school.</p>
+                <div class="contact-card slide-up">
+                    <p>Phone: +91 12345 67890</p>
+                    <p>Email: welcome@schoolspark.edu</p>
+                    <p>Address: 123 Learning Lane, Happy City</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 SchoolSpark. Designed with animation for students.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
